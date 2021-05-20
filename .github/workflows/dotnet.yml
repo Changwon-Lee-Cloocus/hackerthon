@@ -26,10 +26,10 @@ jobs:
       run: dotnet pack --configuration Release ${{ env.LogicProjectPath }}
     - name: Push package to GitHub registry
       run: dotnet nuget push ${{ env.LogicProjectPath }}/**/*.nupkg --skip-duplicate
-    - name: Restore dependencies
-      run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --configuration Release
+    - name: Publish 
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
     - name: Test
       run: dotnet test --filter FullyQualifiedName\!~FunctionalTests
     - name: Upload a Build Artifact
@@ -38,7 +38,7 @@ jobs:
         # Artifact name
         name: dotnettest
         # A file, directory or wildcard pattern that describes what to upload
-        path: /home/runner/work/hackerthon/hackerthon/AnimalAdoption.Web.Portal/bin/Debug/netcoreapp3.1/*
+        path: ${{env.DOTNET_ROOT}}/myapp
         # The desired behavior if no files are found using the provided path.
   deploy:
     runs-on: ubuntu-latest
