@@ -41,17 +41,23 @@ jobs:
         path: /home/runner/work/hackerthon/hackerthon/AnimalAdoption.Web.Portal/bin/Debug/netcoreapp3.1/*
         # The desired behavior if no files are found using the provided path.
   deploy:
-    needs: build
     runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
     steps:
-    - name: Download a Build Artifact
-      uses: actions/download-artifact@v2.0.9
-      with:
-        # Artifact name
-        name: dotnettest
-    - name: Azure WebApp
-      uses: Azure/webapps-deploy@v2
-      with:
-        # Name of the Azure Web App
-        app-name: ${{secrets.TEST_KEY}}
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: dotnettest
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'hackerthon'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.TEST_KEY }}
+          package: .
       
