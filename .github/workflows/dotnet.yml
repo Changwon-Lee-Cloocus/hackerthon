@@ -19,7 +19,8 @@ jobs:
       with:
         dotnet-version: 3.1.x
         source-url: ${{ env.GitHubPackageFeedUrl }}
-      env: ${{secrets.GITHUB_TOKEN}}
+      env: 
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - name: Package up project
       run: dotnet pack --configuration Release ${{ env.LogicProjectPath }}
     - name: Push package to GitHub registry
