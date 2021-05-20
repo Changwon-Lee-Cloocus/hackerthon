@@ -5,13 +5,14 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+    
+env: 
+  GitHubPackageFeedUrl: https://nuget.pkg.github.com/Changwon-Lee-Cloocus/index.json
+  LogicProjectPath: ${{ github.WORKSPACE }}/AnimalAdoption.Common.Logic
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      GitHubPackageFeedUrl: https://nuget.pkg.github.com/Changwon-Lee-Cloocus/index.json
-      LogicProjectPath: ${{ github.WORKSPACE }}/AnimalAdoption.Common.Logic
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -39,4 +40,22 @@ jobs:
         # A file, directory or wildcard pattern that describes what to upload
         path: /home/runner/work/hackerthon/hackerthon/AnimalAdoption.Web.Portal/bin/Debug/netcoreapp3.1/*
         # The desired behavior if no files are found using the provided path.
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2.0.9
+      with:
+        # Artifact name
+        name: dotnettest
+    - name: Azure WebApp
+      uses: Azure/webapps-deploy@v2
+      with:
+        # Name of the Azure Web App
+        app-name: hackerthon
+        # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
+        publish-profile: ${{secrets.TEST_KEY}}
+        slot-name: dotnettest
+
       
