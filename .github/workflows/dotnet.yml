@@ -5,12 +5,12 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-env: 
-    GitHubPackageFeedUrl: https://nuget.pkg.github.com/Changwon-Lee-Cloocus/index.json
-    LogicProjectPath: ${{ github.WORKSPACE }}/AnimalAdoption.Common.Logic
+
 jobs:
   build:
-
+    env: 
+      GitHubPackageFeedUrl: https://nuget.pkg.github.com/Changwon-Lee-Cloocus/index.json
+      LogicProjectPath: ${{ github.WORKSPACE }}/AnimalAdoption.Common.Logic
     runs-on: ubuntu-latest
 
     steps:
