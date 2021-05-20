@@ -22,7 +22,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test
+      run: dotnet test --filter FullyQualifiedName\!~FunctionalTests
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.3
       with:
