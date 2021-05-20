@@ -8,11 +8,10 @@ on:
 
 jobs:
   build:
-    env: 
+    runs-on: ubuntu-latest
+    env:
       GitHubPackageFeedUrl: https://nuget.pkg.github.com/Changwon-Lee-Cloocus/index.json
       LogicProjectPath: ${{ github.WORKSPACE }}/AnimalAdoption.Common.Logic
-    runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
