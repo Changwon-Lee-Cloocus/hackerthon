@@ -1,0 +1,23 @@
+name: .NET
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    
+env: 
+  GitHubPackageFeedUrl: https://nuget.pkg.github.com/Changwon-Lee-Cloocus/index.json
+  LogicProjectPath: ${{ github.WORKSPACE }}/AnimalAdoption.Common.Logic
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.CREDENTIALS }}
+
+    - run: |
+        az webapp list --query "[?state=='Running']"
+      
