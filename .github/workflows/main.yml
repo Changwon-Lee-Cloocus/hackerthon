@@ -23,6 +23,7 @@ jobs:
       with:
         # Name of the Azure Web App
         app-name: hackerthon
+        mask-inputs: false
         # Name of an existing slot other than the production slot. Default value is production
         app-settings-json: ${{ secrets.APP_SETTINGS }}
     - run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
