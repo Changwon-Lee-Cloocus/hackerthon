@@ -14,18 +14,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: azure/login@v1
+    - name: Azure Login
+      uses: azure/login@v1
       with:
         creds: ${{ secrets.CREDENTIAL }}
     - name: Azure App Service Settings
-    - uses: Azure/appservice-settings@v1
+      uses: Azure/appservice-settings@v1
       with:
         # Name of the Azure Web App
         app-name: hackerthon
         # Name of an existing slot other than the production slot. Default value is production
         app-settings-json: ${{ secrets.APP_SETTINGS }}
-      id: settings
     - run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
-    - run: |
-        az logout
       
