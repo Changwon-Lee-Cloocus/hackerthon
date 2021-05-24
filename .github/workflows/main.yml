@@ -24,4 +24,8 @@ jobs:
         app-name: hackerthon
         # Name of an existing slot other than the production slot. Default value is production
         app-settings-json: ${{ secrets.APP_SETTINGS }}
+      id: settings
+    - run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
+    - run: |
+        az logout
       
