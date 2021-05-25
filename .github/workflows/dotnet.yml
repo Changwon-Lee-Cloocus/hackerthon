@@ -1,8 +1,8 @@
 name: .NET
 
 on:
-  schedule:
-    - cron: '0 0 0 0 0'
+  push:
+    branches: [ master ]
     
 env: 
   GitHubPackageFeedUrl: https://nuget.pkg.github.com/Changwon-Lee-Cloocus/index.json
@@ -50,12 +50,39 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: dotnettest
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.PROD_KEY }}
+      - name: Azure key vault - Get Secrets
+        uses: Azure/get-keyvault-secrets@v1.2
+        with:
+          # Name of the azure key vault
+          keyvault: hackerthoncwon
+          # Name of the secret to be fetched
+          secrets: globalPassword
+        id: myGetSecretAction
+      - name: Azure App Service Settings
+        uses: Azure/appservice-settings@v1
+        with:
+          # Name of the Azure Web App
+          app-name: hackerthon
+          mask-inputs: false
+          # Name of an existing slot other than the production slot. Default value is production
+          app-settings-json: '[{"name":"SimulatedFailureChance", "value": "0"}, {"name": "GlobalPassword", "value": ${{steps.myGetSecretAction.outputs.globalPassword}}}]'
+            # Deploy ARM template
+      - name: Run ARM deploy
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.PROD_KEY.subscriptionId }}
+          resourceGroupName: rg-hackerthon-prod
+          template: ./azuredeploy.json
+          parameters: tenantGuid=${{ secrets.PROD_KEY.tenantId }}, webAppName=hackerthonprod
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'hackerthon'
+          app-name: 'hackerthonprod'
           slot-name: 'production'
-          publish-profile: ${{ secrets.TEST_KEY }}
           package: .
       
