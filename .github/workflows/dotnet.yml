@@ -59,7 +59,7 @@ jobs:
         with:
           subscriptionId: ${{ secrets.PROD_KEY.subscriptionId }}
           resourceGroupName: rg-hackerthon-prod
-          template: ${{ github.workspace }}/azuredeploy.json
+          template: ${{ github.workspace }}/deploy.json
           parameters: tenantGuid=${{ secrets.PROD_KEY.tenantId }}, webAppName=hackerthonprod, keyVaultName=hackerthoncwonprod
       - name: Azure key vault - Get Secrets
         uses: Azure/get-keyvault-secrets@v1.2
