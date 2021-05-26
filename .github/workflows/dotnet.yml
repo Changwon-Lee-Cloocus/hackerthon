@@ -52,7 +52,7 @@ jobs:
         with:
           subscriptionId: ${{ secrets.SUBSCRIBE }}
           resourceGroupName: rg-hackerthon-prod
-          templateLocation: ${{ github.WORKSPACE }}/deploy.json
+          template: ${{ github.WORKSPACE }}/deploy.json
           parameters: tenantGuid=${{ secrets.TENENT }},webAppName=hackerthonprod,keyVaultName=hackerthoncwonprod
   deploy:
     runs-on: ubuntu-latest
