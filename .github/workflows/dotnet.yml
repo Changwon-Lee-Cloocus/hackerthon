@@ -38,19 +38,11 @@ jobs:
         # A file, directory or wildcard pattern that describes what to upload
         path: ${{env.DOTNET_ROOT}}/myapp
         # The desired behavior if no files are found using the provided path.
-  deploy:
+  azureresource:
     runs-on: ubuntu-latest
     needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
     steps:
       - uses: actions/checkout@v2
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: dotnettest
       - name: Azure Login
         uses: azure/login@v1
         with:
@@ -60,8 +52,24 @@ jobs:
         with:
           subscriptionId: ${{ secrets.SUBSCRIBE }}
           resourceGroupName: rg-hackerthon-prod
-          template: ${{ github.WORKSPACE }}/deploy.json
+          templateLocation: ${{ github.WORKSPACE }}/deploy.json
           parameters: tenantGuid=${{ secrets.TENENT }},webAppName=hackerthonprod,keyVaultName=hackerthoncwonprod
+  deploy:
+    runs-on: ubuntu-latest
+    needs: azureresource
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: dotnettest
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.PROD_KEY }}
       - name: Azure key vault - Get Secrets
         uses: Azure/get-keyvault-secrets@v1.2
         with:
