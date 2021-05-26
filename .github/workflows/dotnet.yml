@@ -52,7 +52,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'hackerthoncwon'
+          app-name: 'hackerthon'
           publish-profile: ${{secrets.CREDENTIAL}}
           slot-name: 'production'
           package: .
